@@ -21,4 +21,3 @@ Java 26, Spring Boot, Thymeleaf, and MySQL-compatible TiDB.
 Hosted on Vercel from this repository. The application root is `app`.
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for setup and environment variables.
-
