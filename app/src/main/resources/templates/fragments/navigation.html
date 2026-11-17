@@ -58,7 +58,8 @@
                 <span class="nav-label">Account</span>
                 <a class="nav-link nav-tone-violet" th:href="@{/profile}"
                    th:classappend="${activePage == 'profile'} ? ' is-active' : ''">
-                    <svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#user"></use></svg>
+                    <img class="nav-profile-photo" th:if="${hasProfilePhoto}" th:src="@{/profile/photo}" alt="">
+                    <svg class="icon" th:unless="${hasProfilePhoto}" aria-hidden="true"><use href="/images/ui-icons.svg#user"></use></svg>
                     <span>Profile</span>
                 </a>
                 <a class="nav-link nav-tone-coral" th:if="${isAdmin}" th:href="@{/admin}"

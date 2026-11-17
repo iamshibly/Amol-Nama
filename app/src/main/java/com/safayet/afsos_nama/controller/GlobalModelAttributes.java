@@ -3,6 +3,7 @@ package com.safayet.afsos_nama.controller;
 import com.safayet.afsos_nama.model.User;
 import com.safayet.afsos_nama.model.enums.Role;
 import com.safayet.afsos_nama.service.UserService;
+import com.safayet.afsos_nama.service.ProfilePhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalModelAttributes {
 
     private final UserService userService;
+    private final ProfilePhotoService profilePhotos;
 
     @ModelAttribute
     public void addCurrentUser(Model model, Authentication authentication) {
@@ -28,6 +30,7 @@ public class GlobalModelAttributes {
 
         if (user != null) {
             model.addAttribute("currentUser", user);
+            model.addAttribute("hasProfilePhoto", profilePhotos.exists(user.getId()));
             model.addAttribute("isAdmin", user.getRole() == Role.ADMIN);
         }
     }

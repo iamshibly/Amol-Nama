@@ -20,9 +20,21 @@
             <aside class="profile-identity-card">
                 <div class="profile-pattern"></div>
                 <img th:src="@{/images/brand-logo.svg}" alt="AmolNama">
-                <div class="profile-large-avatar" th:text="${#strings.substring(currentUser.name,0,1)}">S</div>
+                <img class="profile-photo-avatar" th:if="${hasProfilePhoto}" th:src="@{/profile/photo}" alt="Your profile photo">
+                <div class="profile-large-avatar" th:unless="${hasProfilePhoto}" th:text="${#strings.substring(currentUser.name,0,1)}">S</div>
                 <h2 th:text="${currentUser.name}">Student Name</h2>
                 <p th:text="${currentUser.email}">student@example.com</p>
+                <div class="profile-photo-controls">
+                    <form th:action="@{/profile/photo}" method="post" enctype="multipart/form-data">
+                        <label for="profilePhoto">Profile photo</label>
+                        <input id="profilePhoto" name="photo" type="file" accept="image/jpeg,image/png" required aria-describedby="photoHelp">
+                        <p id="photoHelp">JPEG or PNG, up to 2 MB and 4096 pixels per side. Your photo will be cropped to a square and stays private.</p>
+                        <button class="button button-blue" type="submit" th:text="${hasProfilePhoto ? 'Replace photo' : 'Upload photo'}">Upload photo</button>
+                    </form>
+                    <form th:if="${hasProfilePhoto}" th:action="@{/profile/photo/remove}" method="post">
+                        <button class="button profile-photo-remove" type="submit">Remove photo</button>
+                    </form>
+                </div>
                 <div class="profile-identity-meta">
                     <span><svg class="icon"><use href="/images/ui-icons.svg#school"></use></svg><strong th:text="${currentUser.university != null && !currentUser.university.isBlank() ? currentUser.university : 'University not set'}">University</strong></span>
                     <span><svg class="icon"><use href="/images/ui-icons.svg#book"></use></svg><strong th:text="${currentUser.department != null && !currentUser.department.isBlank() ? currentUser.department : 'Department not set'}">Department</strong></span>
@@ -63,11 +75,11 @@
             <p>Download the profile, reflections, promises, and reactions stored for your account.</p>
             <a class="button button-blue" th:href="@{/profile/export}">Download my data</a>
             <p th:if="${privacyContact != null and !privacyContact.isBlank()}">
-                To request deletion, email <a th:href="${'mailto:' + privacyContact}" th:text="${privacyContact}">the pilot organizer</a>
+                To request deletion, email <a th:href="${'mailto:' + privacyContact}" th:text="${privacyContact}">the administrator</a>
                 from the address you use to sign in.
             </p>
             <p th:unless="${privacyContact != null and !privacyContact.isBlank()}">
-                To request deletion, contact the organizer who provided your invitation from the address you use to sign in.
+                To request deletion, contact the site administrator from the address you use to sign in.
             </p>
         </section>
     </main>

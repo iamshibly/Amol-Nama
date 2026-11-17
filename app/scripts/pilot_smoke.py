@@ -1,6 +1,8 @@
 """Exercise five HTTP cookie jars and two app instances on a disposable pilot database."""
 import concurrent.futures
 import datetime
+import struct
+import zlib
 from html.parser import HTMLParser
 import http.cookiejar
 import json
@@ -46,6 +48,21 @@ class Client:
         payload = urllib.parse.urlencode(fields | {"_csrf": parser.token}).encode()
         with self.opener.open(base + path, data=payload, timeout=30) as response:
             return urllib.parse.urlsplit(response.url).path, response.read().decode()
+
+    def upload_photo(self, photo):
+        parser = CsrfParser()
+        parser.feed(self.get("/profile")[1])
+        assert parser.token
+        boundary = "AmolPhoto" + secrets.token_hex(8)
+        payload = (
+            f'--{boundary}\r\nContent-Disposition: form-data; name="_csrf"\r\n\r\n{parser.token}\r\n'
+            f'--{boundary}\r\nContent-Disposition: form-data; name="photo"; filename="photo.png"\r\n'
+            'Content-Type: image/png\r\n\r\n'
+        ).encode() + photo + f'\r\n--{boundary}--\r\n'.encode()
+        request = urllib.request.Request(BASE + "/profile/photo", data=payload,
+                    headers={"Content-Type": "multipart/form-data; boundary=" + boundary})
+        with self.opener.open(request, timeout=30) as response:
+            return response.read().decode()
 
     def register(self, email, name):
         result = self.post("/register", {
@@ -117,6 +134,23 @@ def main():
         barrier = threading.Barrier(5)
         students = list(pool.map(lambda index: exercise_student(index, barrier), range(1, 6)))
         first, post_id, promise_id = students[0]
+        def chunk(kind, data):
+            return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+        png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+               + chunk(b"IDAT", zlib.compress(b"\x00\xff\x00\x00")) + chunk(b"IEND", b""))
+        assert "Profile photo updated." in first.upload_photo(png)
+        with first.opener.open(BASE + "/profile/photo", timeout=30) as response:
+            assert response.headers.get_content_type() == "image/jpeg"
+            assert response.read().startswith(b"\xff\xd8")
+        assert first.export()["profilePhoto"]["contentType"] == "image/jpeg"
+        try:
+            students[1][0].get("/profile/photo")
+        except urllib.error.HTTPError as error:
+            assert error.code == 404
+        else:
+            raise AssertionError("A different student received the owner's photo")
+        assert first.post("/profile/photo/remove", {}, "/profile")[0] == "/profile"
+        assert not first.export()["profilePhoto"]
         second = students[1][0]
         assert TAG not in second.get("/confessions")[1]
         assert second.get(f"/afsos/details/{post_id}")[0] == "/afsos"

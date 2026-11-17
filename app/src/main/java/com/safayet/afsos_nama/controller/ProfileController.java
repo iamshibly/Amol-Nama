@@ -3,6 +3,7 @@ package com.safayet.afsos_nama.controller;
 import com.safayet.afsos_nama.dto.ProfileDTO;
 import com.safayet.afsos_nama.model.User;
 import com.safayet.afsos_nama.service.UserService;
+import com.safayet.afsos_nama.service.ProfilePhotoService;
 import com.safayet.afsos_nama.service.PilotAccess;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
@@ -30,6 +31,7 @@ public class ProfileController {
     private final UserService userService;
     private final PilotAccess pilotAccess;
     private final JdbcTemplate jdbc;
+    private final ProfilePhotoService profilePhotos;
 
     @GetMapping(value = "/profile/export", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> export(Authentication authentication) {
@@ -37,6 +39,7 @@ public class ProfileController {
         int userId = user.getId();
         Map<String, Object> data = Map.of(
                 "profile", userService.getProfile(user),
+                "profilePhoto", profilePhotos.export(userId),
                 "reflections", jdbc.queryForList("""
                         SELECT id, title, description, category, level, regret_date, related_course, semester,
                                consequence, lesson_learned, status, image_url, shared_anonymously, approved_for_feed
