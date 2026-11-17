@@ -53,9 +53,9 @@ jobs:
           SESSION_COOKIE_SECURE: 'false'
           PILOT_SMOKE_MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
-          PORT=8080 java -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-primary.log" 2>&1 &
+          PORT=8080 java -XX:TieredStopAtLevel=1 -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-primary.log" 2>&1 &
           primary=$!
-          PORT=8081 java -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-secondary.log" 2>&1 &
+          PORT=8081 java -XX:TieredStopAtLevel=1 -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-secondary.log" 2>&1 &
           secondary=$!
           trap 'kill "$primary" "$secondary" 2>/dev/null || true' EXIT
           curl --fail --retry 30 --retry-connrefused --retry-delay 2 http://localhost:8080/healthz

@@ -10,4 +10,4 @@ FROM eclipse-temurin:26-jre
 WORKDIR /app
 COPY --from=build /app/target/amolnama-*.jar /app/app.jar
 USER 10001:10001
-ENTRYPOINT ["/opt/java/openjdk/bin/java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["/opt/java/openjdk/bin/java", "-XX:TieredStopAtLevel=1", "-jar", "/app/app.jar"]

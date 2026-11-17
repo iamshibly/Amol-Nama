@@ -64,6 +64,8 @@ If the repository is missing, use Adjust GitHub App Permissions or Configure Git
 
 The app/vercel.json explicitly selects the container framework. Dockerfile.vercel installs Maven dependencies, builds the Java application, and runs it using Java 26. Do not enter an npm build command.
 
+The deployment selects Tokyo (`hnd1`) to be close to this project's TiDB database in AWS ap-northeast-1. If you move the database, update `regions` in app/vercel.json accordingly. The runtime uses `-XX:TieredStopAtLevel=1` to prioritize short JVM startup over peak long-running throughput. CI starts its two JVMs with the same setting. The HTTP port remains `${PORT:8080}`. A successful build does not establish that every cold start meets Vercel's startup deadline; verify the live app after an idle interval as well.
+
 If an existing Vercel project uses this repository, update its Root Directory to app before redeploying.
 
 ## 7. Add environment variables before deploying
