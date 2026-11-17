@@ -1,0 +1,70 @@
+name: Pilot checks
+
+on:
+  pull_request:
+  push:
+    branches: [main, dev, 'feature/**']
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only
+          MYSQL_DATABASE: afsos_nama_ci
+          MYSQL_USER: ci
+          MYSQL_PASSWORD: ci-only
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    env:
+      TEST_DATABASE_URL: jdbc:mysql://127.0.0.1:3306/afsos_nama_ci
+      TEST_DATABASE_USERNAME: ci
+      TEST_DATABASE_PASSWORD: ci-only
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '26'
+          cache: maven
+          cache-dependency-path: app/pom.xml
+      - run: git show --format= --check HEAD
+      - run: node --check src/main/resources/static/js/app.js
+      - run: ./mvnw -B verify
+      - run: docker build -f Dockerfile.vercel .
+      - name: Five-account pilot over two app instances
+        env:
+          DATABASE_URL: jdbc:mysql://127.0.0.1:3306/afsos_nama_ci
+          DATABASE_USERNAME: ci
+          DATABASE_PASSWORD: ci-only
+          SESSION_COOKIE_SECURE: 'false'
+          PILOT_INVITE_SECRET: smoke-invite-only
+          PILOT_ALLOWED_EMAILS: pilot1@example.test,pilot2@example.test,pilot3@example.test,pilot4@example.test,pilot5@example.test,pilot6@example.test
+          PILOT_SMOKE_MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          PORT=8080 java -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-primary.log" 2>&1 &
+          primary=$!
+          PORT=8081 java -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-secondary.log" 2>&1 &
+          secondary=$!
+          trap 'kill "$primary" "$secondary" 2>/dev/null || true' EXIT
+          curl --fail --retry 30 --retry-connrefused --retry-delay 2 http://localhost:8080/healthz
+          curl --fail --retry 30 --retry-connrefused --retry-delay 2 http://localhost:8081/healthz
+          python3 scripts/pilot_smoke.py
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: pilot-startup-logs
+          path: ${{ runner.temp }}/afsos-*.log

@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: afsos_nama
+      MYSQL_USER: afsos
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:?Set a local DATABASE_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=127.0.0.1", "--silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - afsos-data:/var/lib/mysql
+volumes:
+  afsos-data:

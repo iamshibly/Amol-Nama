@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="picker(path, view)" th:action="@{${path}}" method="get" class="semester-picker">
+    <label for="semesterScope">Semester</label>
+    <select id="semesterScope" name="semester">
+        <option value="" th:selected="${view.selected == null}">All semesters</option>
+        <option th:each="choice : ${view.choices}" th:value="${choice}"
+                th:selected="${choice == view.selected}" th:text="${choice}">Semester</option>
+    </select>
+    <button class="button button-blue" type="submit">Apply</button>
+</form>
+<details th:fragment="scoreHelp" class="score-help">
+    <summary>How this score works</summary>
+    <p>The score starts at 50. It adds up to 20 points for kept promises and up to 30 for resolved reflections.
+       It subtracts up to 30 for unresolved high-impact reflections and 20 for currently broken promises.</p>
+    <p>Each adjustment is proportional to its share of the selected reflections or promises. Empty groups contribute zero.
+       This is a personal reflection aid. Try recording a lesson or completing one practical promise.</p>
+</details>
+</body>
+</html>

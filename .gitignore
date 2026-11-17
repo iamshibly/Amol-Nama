@@ -1,0 +1,9 @@
+target/
+.env
+.env.*
+!.env.example
+.vercel/
+.idea/
+*.iml
+.DS_Store
+__pycache__/

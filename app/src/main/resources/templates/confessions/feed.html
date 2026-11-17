@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Confessions | AmolNama</title>
+    <link rel="icon" th:href="@{/images/brand-logo.svg}" type="image/svg+xml">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/design-v3.css}">
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/navigation :: navigation('confessions')}"></div>
+    <main class="app-main">
+        <header class="workspace-header">
+            <div>
+                <span class="page-kicker">Anonymous community</span>
+                <h1>Campus Confessions</h1>
+                <p>Shared reflections from students who chose honesty over hiding the mistake.</p>
+            </div>
+            <a class="button button-coral" th:href="@{/afsos/new}"><svg class="icon"><use href="/images/ui-icons.svg#send"></use></svg>Share an Afsos</a>
+        </header>
+
+        <section class="confession-intro">
+            <div class="confession-intro-icon"><svg class="icon"><use href="/images/ui-icons.svg#messages"></use></svg></div>
+            <div><span>Community rule</span><h2>Sharing and privacy</h2><p>Posts are anonymous to other students. Moderators can see the author. Leave out classmates’ names and private information.</p></div>
+            <div class="confession-intro-stat"><strong th:text="${#lists.size(confessions)}">0</strong><span>Published stories</span></div>
+        </section>
+
+        <section class="empty-page-state" th:if="${#lists.isEmpty(confessions)}">
+            <span class="empty-page-icon"><svg class="icon"><use href="/images/ui-icons.svg#messages"></use></svg></span>
+            <h2>No published confessions yet</h2><p>Share an Afsos anonymously and wait for admin approval.</p>
+        </section>
+
+        <section class="confession-feed" th:unless="${#lists.isEmpty(confessions)}">
+            <article class="confession-card" th:each="afsos,stat : ${confessions}" th:classappend="${' confession-accent-' + (stat.index % 4)}">
+                <header>
+                    <span class="anonymous-avatar"><svg class="icon"><use href="/images/ui-icons.svg#user"></use></svg></span>
+                    <div><strong>Anonymous Student</strong><span th:text="${#temporals.format(afsos.regretDate, 'dd MMMM yyyy')}">Date</span></div>
+                    <span class="category-badge" th:text="${afsos.category.label}">Category</span>
+                </header>
+                <div class="confession-content">
+                    <h2 th:text="${afsos.title}">Confession title</h2>
+                    <p th:text="${afsos.description}">Description</p>
+                    <div class="confession-tags"><span class="level-tag" th:classappend="${' level-' + #strings.toLowerCase(afsos.level.name())}" th:text="${afsos.level.label}">Level</span><span class="status-pill" th:classappend="${' status-' + #strings.toLowerCase(afsos.status.name())}" th:text="${afsos.status.label}">Status</span></div>
+                </div>
+                <footer class="reaction-row" th:with="postReactions=${reactions.get(afsos.id)}">
+                    <form th:each="reaction : ${reactionTypes}"
+                          th:with="count=${postReactions == null ? null : postReactions.get(reaction.name())}"
+                          th:action="@{/confessions/{id}/react/{type}(id=${afsos.id},type=${reaction.name()})}" method="post">
+                        <button type="submit" class="reaction-button" th:classappend="${' reaction-' + reaction.tone}"
+                                th:attr="aria-pressed=${count != null and count.selected}">
+                            <svg class="icon" aria-hidden="true"><use th:attr="href=${'/images/ui-icons.svg#' + reaction.icon}"></use></svg>
+                            <span th:text="${reaction.label}">Reaction</span>
+                            <strong th:text="${count == null ? 0 : count.total}">0</strong>
+                        </button>
+                    </form>
+                    <form th:if="${reactedPostIds.contains(afsos.id)}"
+                          th:action="@{/confessions/{id}/reaction/remove(id=${afsos.id})}" method="post">
+                        <button type="submit" class="button button-ghost">Remove my reaction</button>
+                    </form>
+                </footer>
+            </article>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

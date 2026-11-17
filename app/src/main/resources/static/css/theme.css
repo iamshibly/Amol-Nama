@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Manrope:wght@400;600;700;800&display=swap");
+
+:root {
+    --campus-midnight: #182b49;
+    --campus-indigo: #5576df;
+    --campus-coral: #ed816b;
+    --campus-teal: #1f9a85;
+    --campus-primary-text: #3956b3;
+    --campus-canvas: #f7f8fc;
+    --campus-surface: #fff;
+    --campus-ink: #25334a;
+    --campus-muted: #64748b;
+    --navy-900: var(--campus-midnight);
+    --ink-900: var(--campus-ink);
+    --ink-600: var(--campus-muted);
+    --blue: var(--campus-indigo);
+    --blue-dark: var(--campus-primary-text);
+    --coral: var(--campus-coral);
+    --green: var(--campus-teal);
+    --canvas: var(--campus-canvas);
+    --surface: var(--campus-surface);
+    --campus-font: Manrope, "Hind Siliguri", "Segoe UI", sans-serif;
+}
+
+body {
+    background: var(--campus-canvas);
+    color: var(--campus-ink);
+    font-family: var(--campus-font);
+    font-size: 1rem;
+}
+
+.app-sidebar, .login-showcase, .register-showcase {
+    background: var(--campus-midnight);
+}
+
+.button.button-blue, .button.button-navy {
+    background: var(--campus-primary-text);
+    color: var(--campus-surface);
+}
+
+.button.button-coral {
+    background: var(--campus-coral);
+    color: var(--campus-midnight);
+}
+
+.button.button-success {
+    background: #117568;
+    color: var(--campus-surface);
+}
+
+.status-pill.status-completed { border-color: var(--campus-teal); }
+.field-error { color: #9f2439; }
+
+:is(.app-main, .auth-body) :is(a, button, input, select, textarea, summary):focus-visible {
+    outline: 3px solid var(--campus-primary-text);
+    outline-offset: 3px;
+}
+
+:where(.app-sidebar, .login-showcase, .register-showcase) :focus-visible {
+    outline-color: #c4d1ff;
+}
+
+:where(.button, .reaction-button, .icon-button, .date-input-button) { min-height: 44px; }
+
+.semester-picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .65rem;
+    margin: 1rem 0;
+}
+
+.semester-picker select {
+    font: inherit;
+    min-height: 44px;
+    max-width: 100%;
+    border: 1px solid var(--campus-muted);
+    border-radius: 10px;
+    color: var(--campus-ink);
+    background: var(--campus-surface);
+    padding: .5rem .75rem;
+}
+
+.weekly-recap, .pilot-moderation { padding: 1.25rem; margin: 1rem 0; }
+.weekly-recap h2, .pilot-moderation h2 { margin-top: 0; }
+.recap-facts { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.recap-facts dt { color: var(--campus-muted); }
+.recap-facts dd { margin: .2rem 0 0; font-weight: 700; }
+
+.score-help > summary, .pilot-moderation > summary { cursor: pointer; font-weight: 700; }
+.score-help { font-size: .9rem; margin: .7rem 0; }
+.score-help p { margin: .5rem 0; }
+.pilot-moderation .moderation-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .5rem 0;
+}
+
+.reaction-button[aria-pressed="true"] {
+    outline: 2px solid var(--campus-primary-text);
+    outline-offset: 1px;
+    background: #e7ecff;
+    color: var(--campus-midnight);
+}
+
+@media (max-width: 600px) {
+    .details-hero-actions { flex-wrap: wrap; }
+    .semester-picker label { flex-basis: 100%; }
+    .recap-facts { grid-template-columns: 1fr; }
+}
