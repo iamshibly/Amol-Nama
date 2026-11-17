@@ -25,7 +25,7 @@ public class PromiseService {
     public boolean savePromise(PromiseDTO dto, User user) {
         StudentPromise promise = dto.getId() == null
                 ? new StudentPromise()
-                : promiseRepository.findForUpdate(dto.getId(), user).orElse(null);
+                : promiseRepository.findForUpdate(dto.getId(), user.getId()).orElse(null);
 
         if (promise == null || dto.getTitle() == null || dto.getTitle().isBlank() || dto.getTargetDate() == null) {
             return false;
@@ -93,7 +93,7 @@ public class PromiseService {
 
     @Transactional
     public boolean markCompleted(Integer id, User user) {
-        StudentPromise promise = promiseRepository.findForUpdate(id, user).orElse(null);
+        StudentPromise promise = promiseRepository.findForUpdate(id, user.getId()).orElse(null);
 
         if (promise == null || promise.getStatus() != PromiseStatus.ACTIVE) {
             return false;
@@ -106,7 +106,7 @@ public class PromiseService {
 
     @Transactional
     public boolean markBroken(Integer id, User user) {
-        StudentPromise promise = promiseRepository.findForUpdate(id, user).orElse(null);
+        StudentPromise promise = promiseRepository.findForUpdate(id, user.getId()).orElse(null);
 
         if (promise == null || promise.getStatus() != PromiseStatus.ACTIVE) {
             return false;
@@ -120,7 +120,7 @@ public class PromiseService {
 
     @Transactional
     public boolean deletePromise(Integer id, User user) {
-        StudentPromise promise = promiseRepository.findForUpdate(id, user).orElse(null);
+        StudentPromise promise = promiseRepository.findForUpdate(id, user.getId()).orElse(null);
 
         if (promise == null) {
             return false;
