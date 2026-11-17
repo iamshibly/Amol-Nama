@@ -1,5 +1,7 @@
 # AmolNama
 
+Read the [A-to-Z project report and user guide](PROJECT_REPORT.md) for features, user workflows, administrator actions, architecture, and known gaps.
+
 For the complete GitHub-to-Vercel walkthrough, open [DEPLOYMENT.md](DEPLOYMENT.md).
 
 A student reflection journal with private reflections, promises, semester reports, a moderated anonymous feed, and role-based administration. Java 26, Spring Boot 4.1, Thymeleaf, Maven, and MySQL. The site uses shared JDBC sessions, so routing a browser to another instance does not require a new login. Login cookies expire when the browser session ends or after eight hours of inactivity.

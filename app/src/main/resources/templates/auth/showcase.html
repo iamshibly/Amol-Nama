@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<section th:fragment="showcase" class="login-showcase" aria-labelledby="journey-heading">
+    <div class="journey-orbits" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <a class="login-brand" th:href="@{/login}" aria-label="AmolNama sign in">
+        <img th:src="@{/images/brand-logo.svg}" alt="">
+        <span><strong>AmolNama</strong><small>Reflect · Learn · Improve</small></span>
+    </a>
+    <div class="login-showcase-copy">
+        <span class="showcase-eyebrow"><span></span> A little reflection goes a long way</span>
+        <h1 id="journey-heading">Small reflections today.<br><em>Better decisions<br>tomorrow.</em></h1>
+        <p>Make sense of the moments that matter. Notice your patterns, capture the lesson, and turn it into one small promise.</p>
+    </div>
+    <div class="journey-card" aria-label="Illustrative reflection journey, not your account data">
+        <div class="journey-card-heading"><h2>Your reflection journey</h2><span>Example semester</span></div>
+        <div class="journey-chart" aria-hidden="true">
+            <svg viewBox="0 0 440 64" fill="none" preserveAspectRatio="none">
+                <path d="M0 58H440M0 30H440" stroke="#ffffff" stroke-opacity=".08"/>
+                <path d="M0 54C30 54 30 38 60 42S100 56 130 35S165 47 195 26S235 38 265 20S305 28 340 13S390 22 440 5" stroke="#7fa9ff" stroke-width="2.5"/>
+                <circle cx="440" cy="5" r="4" fill="#e7b853"/>
+            </svg>
+        </div>
+        <div class="journey-stats">
+            <div><span class="journey-stat-icon blue"><svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#book"></use></svg></span><strong>12</strong><span>Reflections logged</span></div>
+            <div><span class="journey-stat-icon mint"><svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#trend"></use></svg></span><strong>5</strong><span>Patterns noticed</span></div>
+            <div><span class="journey-stat-icon peach"><svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#check"></use></svg></span><strong>8</strong><span>Promises kept</span></div>
+        </div>
+        <p class="journey-example-note">An illustration of what your journey could look like.</p>
+    </div>
+    <div class="journey-steps" aria-label="How AmolNama works"><span><b>01</b> Reflect</span><span><b>02</b> Understand</span><span><b>03</b> Take action</span></div>
+    <div class="login-privacy-note">
+        <span><svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#shield"></use></svg></span>
+        <p>Your journal is private. Shared stories appear anonymously to students; moderators can see the author.</p>
+    </div>
+</section>
+</body>
+</html>

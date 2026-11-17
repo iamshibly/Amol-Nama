@@ -6,36 +6,11 @@
     <meta name="color-scheme" content="light">
     <title>Sign In | AmolNama</title>
     <link rel="icon" th:href="@{/images/brand-logo.svg}" type="image/svg+xml">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/design-v3.css}">
-    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 <body class="auth-body auth-login-body">
 <main class="login-shell">
-    <section class="login-showcase" aria-label="About AmolNama">
-        <div class="login-orbit login-orbit-one"></div>
-        <div class="login-orbit login-orbit-two"></div>
-        <div class="login-orbit-dot login-orbit-dot-one"></div>
-        <div class="login-orbit-dot login-orbit-dot-two"></div>
-
-        <a class="login-brand" th:href="@{/login}" aria-label="AmolNama sign in">
-            <img th:src="@{/images/brand-logo.svg}" alt="AmolNama">
-            <span>
-                <strong>AmolNama</strong>
-                <small>Reflect · Learn · Improve</small>
-            </span>
-        </a>
-
-        <div class="login-showcase-copy">
-            <h1>Small reflections today,<br><span>better decisions tomorrow.</span></h1>
-            <p>A safe space to record what happened, learn the pattern, and build practical promises for growth.</p>
-        </div>
-
-        <div class="login-privacy-note">
-            <span><svg class="icon"><use href="/images/ui-icons.svg#shield"></use></svg></span>
-            <p>Your reflections remain private unless<br>you choose anonymous sharing.</p>
-        </div>
-    </section>
+    <section th:replace="~{auth/showcase :: showcase}"></section>
 
     <section class="login-form-area">
         <div class="login-mobile-brand">
@@ -46,8 +21,8 @@
         <div class="login-form-card">
             <div class="auth-heading login-heading">
                 <span class="page-kicker">Welcome back</span>
-                <h2>Sign in to your workspace</h2>
-                <p>Continue your semester reflection journey.</p>
+                <h2>Welcome to your next chapter.</h2>
+                <p>Take a moment to reflect. Then take your next step.</p>
             </div>
             <div class="auth-message auth-message-danger" th:if="${param.disabled}">
                 <svg class="icon">
@@ -56,9 +31,9 @@
 
                 <div>
                     <strong>Account disabled</strong>
-                    <span>Contact your pilot organizer for assistance.</span>
+                    <span>Contact the site administrator for assistance.</span>
                     <a th:if="${!privacyContact.isBlank()}" th:href="${'mailto:' + privacyContact}"
-                       th:text="${privacyContact}">Email the pilot organizer</a>
+                       th:text="${privacyContact}">Email the administrator</a>
                 </div>
             </div>
             <div th:replace="~{fragments/messages :: messages}"></div>
@@ -76,7 +51,7 @@
                     <label for="username"><span>Email address</span></label>
                     <div class="input-shell auth-input-shell login-input-shell">
                         <svg class="icon"><use href="/images/ui-icons.svg#mail"></use></svg>
-                        <input id="username" name="username" type="email" autocomplete="username" placeholder="student@example.com" required autofocus>
+                        <input id="username" name="username" type="email" autocomplete="username" placeholder="student@example.com" required>
                     </div>
                 </div>
 

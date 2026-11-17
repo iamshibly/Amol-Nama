@@ -6,26 +6,16 @@
     <meta name="color-scheme" content="light">
     <title>Create Account | AmolNama</title>
     <link rel="icon" th:href="@{/images/brand-logo.svg}" type="image/svg+xml">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/design-v3.css}">
-    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 <body class="auth-body auth-register-body">
-<main class="auth-layout auth-register-layout">
-    <section class="auth-showcase register-showcase">
-        <div class="auth-showcase-shape auth-shape-one"></div>
-        <div class="auth-showcase-shape auth-shape-two"></div>
-        <a class="auth-brand" th:href="@{/login}"><img th:src="@{/images/brand-logo.svg}" alt="AmolNama"><span><strong>AmolNama</strong><small>Reflect · Learn · Improve</small></span></a>
-        <div class="register-showcase-copy">
-            <h1>Make space to reflect.</h1>
-            <p>Keep a record of what happened, what you learned, and what you want to try next.</p>
-        </div>
-    </section>
+<main class="login-shell registration-shell">
+    <section th:replace="~{auth/showcase :: showcase}"></section>
 
-    <section class="auth-panel register-panel">
-        <div class="auth-panel-inner register-panel-inner">
+    <section class="login-form-area">
+        <div class="login-form-card registration-card">
             <div class="auth-mobile-brand"><img th:src="@{/images/brand-logo.svg}" alt=""><span>AmolNama</span></div>
-            <div class="auth-heading"><span class="page-kicker">Student registration</span><h2>Create your account</h2><p>Sign up with your email to start reflecting and tracking your progress.</p></div>
+            <div class="auth-heading"><span class="page-kicker">Student registration</span><h2>Your next chapter starts here.</h2><p>A little reflection today. A clearer direction tomorrow.</p></div>
 
             <form class="auth-form register-form" th:action="@{/register}" th:object="${registrationDTO}" method="post">
                 <div class="form-grid form-grid-2">
