@@ -78,19 +78,11 @@ Expand Environment Variables on the import screen. Add each Name and Value separ
 | PORT | 8080 |
 | SESSION_COOKIE_SECURE | true |
 | DATABASE_POOL_SIZE | 5 initially. This is the maximum per app instance. |
-| PILOT_ALLOWED_EMAILS | Comma-separated email addresses for your testers and organizer |
-| PILOT_INVITE_SECRET | A long random signing secret generated below, marked sensitive |
 | PRIVACY_CONTACT_EMAIL | Your contact address for account deletion requests |
 
-Use this command in your Mac Terminal to generate the invitation signing secret:
+Registration is public; no invitation code or email allowlist is required. You may remove old PILOT_ALLOWED_EMAILS and PILOT_INVITE_SECRET variables from Vercel.
 
-```sh
-openssl rand -hex 32
-```
-
-Paste the output into PILOT_INVITE_SECRET. Keep it private. Generate individual invitation codes in step 9.
-
-Configure Production first. For branch Preview deployments, set separate database credentials and a different invitation signing secret under Preview. A Preview deployment starts database migrations too, so give it a separate database.
+Configure Production first. For branch Preview deployments, set separate database credentials under Preview. A Preview deployment starts database migrations too, so give it a separate database.
 
 When changing variables after the first deployment, open Project → Settings → Environment Variables, save the changes, and redeploy. Existing deployments keep their previous environment.
 
@@ -100,24 +92,13 @@ Click Deploy. Follow the build logs until the deployment reaches Ready. Open the
 
 If deployment fails, open its Build Logs. If the page reports a server error after building, inspect Runtime Logs and check database connectivity, TLS, credentials, and schema. Ready alone does not verify registration, sign-in, and record persistence. Test those flows next.
 
-## 9. Generate invitations
+## 9. Register your account
 
-From the extracted AmolNama folder, run:
-
-```sh
-cd app
-python3 scripts/pilot_invite.py your-email@example.com
-```
-
-The script privately prompts for the PILOT_INVITE_SECRET used in the target environment. Paste it and press Enter. It prints the code for that email.
-
-Open /register on your live site and enter that email, the code, your name, and a password. New passwords require 12–72 characters and at most 72 UTF-8 bytes. The address must also be in PILOT_ALLOWED_EMAILS.
-
-Repeat the script for each tester's exact email and send each code to its intended tester. The signing secret remains with the organizer.
+Open /register on the live site. Enter your name, email, and password, then confirm the password. No invitation code is required. Passwords require 12–72 characters and at most 72 UTF-8 bytes.
 
 ## 10. Create your administrator account
 
-Register the organizer through the invitation flow first. In your managed database's protected SQL console, replace the example address and run:
+Register the organizer through the public signup form first. In your managed database's protected SQL console, replace the example address and run:
 
 ```sql
 UPDATE users SET role = 'ADMIN'

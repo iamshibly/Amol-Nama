@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -58,10 +57,6 @@ public class AuthController {
         if (registrationDTO.getPassword() != null
                 && registrationDTO.getPassword().getBytes(StandardCharsets.UTF_8).length > 72) {
             result.rejectValue("password", "password.byteLength", "Use a shorter password");
-        }
-        if (!result.hasErrors() && !pilotAccess.allowsRegistration(
-                registrationDTO.getEmail(), registrationDTO.getInviteCode())) {
-            result.rejectValue("inviteCode", "invite.invalid", "This email and invitation code could not be verified.");
         }
         if (result.hasErrors()) {
             return "auth/register";

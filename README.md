@@ -13,7 +13,7 @@ cd app
 cp .env.example .env
 ```
 
-Enter a personal local `DATABASE_PASSWORD`, set `PILOT_ALLOWED_EMAILS` to your test addresses, and generate a random `PILOT_INVITE_SECRET` with `openssl rand -hex 24`. Keep the local `.env` untracked. If a value contains shell syntax or spaces, quote it in `.env`.
+Enter a personal local `DATABASE_PASSWORD`. Registration is open to anyone; no allowlist or invitation code is required. Keep the local `.env` untracked. If a value contains shell syntax or spaces, quote it in `.env`.
 
 ```sh
 docker compose up -d --wait
@@ -40,16 +40,14 @@ Open <http://localhost:8080>. Open <http://localhost:8080/healthz> to check the 
 2. Confirm the **Pilot checks / verify** GitHub Actions job succeeds. In GitHub Settings → Rules → Rulesets, target `main`, require a pull request and the `verify` status check, and disable force pushes. Private repository protection features depend on the GitHub plan. Keep changes on `feature/*` branches. Use Preview to exercise a branch before going to Production.
 3. Provision managed MySQL with **TLS hostname verification**. Use a dedicated database and application user with privileges over that database alone, including the DDL Flyway needs during rollout. Create a separate Preview database and account. Plan around the database provider's connection limits. Vercel custom containers currently do not support static egress IPs, so verify the provider's supported inbound connectivity before committing to a deployment plan.
 4. In Vercel, import the private repository using its owner's connected GitHub account. In the project set **Root Directory** to `app`, production branch to `main`, leave custom build and output overrides empty, and use the container configuration from the repo. Set the environment values below for **Production** and **Preview** separately before deploying. If a previously connected project exists, double-check its repo and root directory.
-5. Deploy after the checks pass. Confirm HTTPS, `/healthz`, registration, login and logout, moderation, and a reflection round trip in the deployed app. Keep the production invite list narrow and enable host rate limits for POST requests to `/login` and `/register` where available. Monitor build and runtime logs and review unexpected bursts of sign-in failures. Exercise the checklist below before opening the pilot.
+5. Deploy after the checks pass. Confirm HTTPS, `/healthz`, registration, login and logout, moderation, and a reflection round trip in the deployed app. Enable host rate limits for POST requests to `/login` and `/register` where available. Monitor build and runtime logs and review unexpected bursts of sign-in failures. Exercise the checklist below before opening the pilot.
 
 | Variable | Vercel value |
 | --- | --- |
 | `DATABASE_URL` | Required. Full JDBC URL, e.g. `jdbc:mysql://db.example.com:3306/afsos_nama?sslMode=VERIFY_IDENTITY`. Supply the provider's CA as described below when the JVM does not already trust its signer. |
 | `DATABASE_USERNAME` | Required. Dedicated MySQL account. Use different Preview credentials. |
 | `DATABASE_PASSWORD` | Required. MySQL account password. Mark sensitive. |
-| `PILOT_ALLOWED_EMAILS` | Required for new accounts. Comma-separated named tester and admin addresses. Case and surrounding whitespace are normalized. |
-| `PILOT_INVITE_SECRET` | Required for new accounts. Long random signing secret. Keep it in the host settings and generate an individual code for each tester. Use different secrets for Preview and Production. Registration is closed if the secret or list is blank. |
-| `PRIVACY_CONTACT_EMAIL` | Organizer address shown in Profile for account deletion requests. If omitted, Profile directs users to their invitation organizer. |
+| `PRIVACY_CONTACT_EMAIL` | Organizer address shown in Profile for account deletion requests. If omitted, Profile directs users to the site administrator. |
 | `PORT` | Set to `8080` so Vercel routes to the same port that Spring Boot listens on. |
 | `SESSION_COOKIE_SECURE` | `true` (also the default). Use `false` only for localhost HTTP testing. |
 | `DATABASE_POOL_SIZE` | Optional. Defaults to `5` per instance. Lower it if needed to stay within the managed database's total connection limit. |
@@ -62,22 +60,18 @@ GitHub hosts the source and runs CI. GitHub Pages only serves static files and c
 - [Vercel GitHub integration and preview environments](https://vercel.com/docs/git/vercel-for-github)
 - [MySQL Connector/J TLS settings](https://dev.mysql.com/doc/connector-j/en/connector-j-reference-using-ssl.html)
 
-## Pilot invitations and the organizer account
+## Public registration and the organizer account
 
-With the matching environment's `PILOT_INVITE_SECRET` loaded locally, run this from `app` for each allowlisted address. Send the resulting code privately to that tester. Each code works for one email.
+Anyone can register at `/register` using a name, email, and password. No invitation code is needed. `PILOT_ALLOWED_EMAILS` and `PILOT_INVITE_SECRET` are no longer used and can be removed from Vercel.
 
-```sh
-python3 scripts/pilot_invite.py tester@example.com
-```
-
-Invite a named organizer using the same registration flow as testers. Verify their identity, then promote that exact email from the provider's protected SQL console. Replace the example address before running. The account must log out and back in to obtain the admin role.
+Register the organizer using the same form. Verify their identity, then promote that exact email from the provider's protected SQL console. Replace the example address before running. The account must log out and back in to obtain the admin role.
 
 ```sql
 UPDATE users SET role = 'ADMIN'
 WHERE email = 'organizer@example.com' AND role = 'STUDENT';
 ```
 
-Remove the organizer from the registration allowlist once their account exists. Admins review pending submissions, hide published submissions, and enable or disable students. Disabling a student removes their persisted sessions. Moderation actions are recorded in `moderation_audit`.
+Admins review pending submissions, hide published submissions, and enable or disable students. Disabling a student removes their persisted sessions. Moderation actions are recorded in `moderation_audit`.
 
 ## Existing MySQL data and rollback
 
@@ -88,7 +82,7 @@ Remove the organizer from the registration allowlist once their account exists. 
 
 ## Account data requests
 
-Profile exports the student's own profile, reflections, promises, and reactions as JSON. To request deletion, a pilot participant contacts the organizer from the registered address. The organizer verifies the request, removes the address from the invite list, disables the account, and performs the deletion in a database transaction after checking the affected account ID. Delete sessions by `PRINCIPAL_NAME`, then the user's promises, reflections, and user row. The reaction foreign keys clear their reactions and reactions on their deleted reflections. Keep the restricted moderation audit according to the pilot's retention policy. Record how long the provider retains backups and allow expired backups to cycle out.
+Profile exports the student's own profile, reflections, promises, and reactions as JSON. To request deletion, a pilot participant contacts the organizer from the registered address. The organizer verifies the request, disables the account, and performs the deletion in a database transaction after checking the affected account ID. Delete sessions by `PRINCIPAL_NAME`, then the user's promises, reflections, and user row. The reaction foreign keys clear their reactions and reactions on their deleted reflections. Keep the restricted moderation audit according to the pilot's retention policy. Record how long the provider retains backups and allow expired backups to cycle out.
 
 ## Pilot acceptance
 

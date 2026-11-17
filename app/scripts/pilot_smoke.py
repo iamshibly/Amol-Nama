@@ -2,7 +2,6 @@
 import concurrent.futures
 import datetime
 from html.parser import HTMLParser
-from pilot_invite import invitation_code
 import http.cookiejar
 import json
 import os
@@ -18,7 +17,6 @@ BASE = os.environ.get("PILOT_SMOKE_URL", "http://localhost:8080")
 SECOND = os.environ.get("PILOT_SMOKE_SECOND_URL", "http://localhost:8081")
 EMAILS = [f"pilot{i}@example.test" for i in range(1, 7)]
 PASSWORD = secrets.token_urlsafe(24)
-INVITE_SECRET = os.environ["PILOT_INVITE_SECRET"]
 TODAY = datetime.date.today()
 TAG = "Pilot smoke " + secrets.token_hex(4)
 
@@ -52,7 +50,7 @@ class Client:
     def register(self, email, name):
         result = self.post("/register", {
             "email": email, "name": name, "password": PASSWORD,
-            "confirmPassword": PASSWORD, "inviteCode": invitation_code(email, INVITE_SECRET), "currentSemester": "Fall smoke",
+            "confirmPassword": PASSWORD, "currentSemester": "Fall smoke",
         }, "/register")
         assert result[0] == "/login", f"Registration failed for {name}"
 
@@ -115,12 +113,6 @@ def execute_sql(statement):
 
 
 def main():
-    outsider = Client()
-    denied, body = outsider.post("/register", {
-        "email": EMAILS[0], "name": "Attempted impersonation", "password": PASSWORD,
-        "confirmPassword": PASSWORD, "inviteCode": invitation_code(EMAILS[1], INVITE_SECRET),
-    }, "/register")
-    assert denied == "/register" and "could not be verified" in body
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
         barrier = threading.Barrier(5)
         students = list(pool.map(lambda index: exercise_student(index, barrier), range(1, 6)))

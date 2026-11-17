@@ -51,8 +51,6 @@ jobs:
           DATABASE_USERNAME: ci
           DATABASE_PASSWORD: ci-only
           SESSION_COOKIE_SECURE: 'false'
-          PILOT_INVITE_SECRET: smoke-invite-only
-          PILOT_ALLOWED_EMAILS: pilot1@example.test,pilot2@example.test,pilot3@example.test,pilot4@example.test,pilot5@example.test,pilot6@example.test
           PILOT_SMOKE_MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
           PORT=8080 java -jar target/amolnama-*.jar > "${RUNNER_TEMP}/afsos-primary.log" 2>&1 &

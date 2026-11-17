@@ -27,10 +27,6 @@ public class RegistrationDTO {
     @Size(max = 72)
     private String confirmPassword;
 
-    @NotBlank(message = "Enter your pilot invitation code")
-    @Size(max = 200)
-    private String inviteCode;
-
     @Size(max = 150, message = "University cannot be more than 150 characters")
     private String university;
 

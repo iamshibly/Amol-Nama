@@ -25,7 +25,7 @@
     <section class="auth-panel register-panel">
         <div class="auth-panel-inner register-panel-inner">
             <div class="auth-mobile-brand"><img th:src="@{/images/brand-logo.svg}" alt=""><span>AmolNama</span></div>
-            <div class="auth-heading"><span class="page-kicker">Student registration</span><h2>Create your account</h2><p>Use the email and invitation code provided for the pilot.</p></div>
+            <div class="auth-heading"><span class="page-kicker">Student registration</span><h2>Create your account</h2><p>Sign up with your email to start reflecting and tracking your progress.</p></div>
 
             <form class="auth-form register-form" th:action="@{/register}" th:object="${registrationDTO}" method="post">
                 <div class="form-grid form-grid-2">
@@ -33,13 +33,6 @@
                     <div class="form-field full-field"><label for="regEmail"><span>Email address</span><small>Required</small></label><div class="input-shell auth-input-shell"><svg class="icon"><use href="/images/ui-icons.svg#mail"></use></svg><input id="regEmail" type="email" th:field="*{email}" placeholder="student@example.com" maxlength="150"></div><span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</span></div>
                     <div class="form-field"><label for="regPassword"><span>Password</span><small>Minimum 12 characters</small></label><div class="input-shell auth-input-shell"><svg class="icon"><use href="/images/ui-icons.svg#lock"></use></svg><input id="regPassword" type="password" name="password" placeholder="Create password" maxlength="72" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="regPassword" aria-label="Show password"><svg class="icon"><use href="/images/ui-icons.svg#eye"></use></svg></button></div><span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span></div>
                     <div class="form-field"><label for="confirmPassword"><span>Confirm password</span><small>Required</small></label><div class="input-shell auth-input-shell"><svg class="icon"><use href="/images/ui-icons.svg#key"></use></svg><input id="confirmPassword" type="password" name="confirmPassword" placeholder="Repeat password" maxlength="72" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="confirmPassword" aria-label="Show password"><svg class="icon"><use href="/images/ui-icons.svg#eye"></use></svg></button></div><span class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirmation error</span></div>
-                    <div class="form-field full-field">
-                        <label for="inviteCode">Pilot invitation code</label>
-                        <div class="input-shell auth-input-shell"><input id="inviteCode" name="inviteCode" type="password"
-                             maxlength="200" autocomplete="off" required
-                             th:attr="aria-invalid=${#fields.hasErrors('inviteCode')},aria-describedby=${#fields.hasErrors('inviteCode') ? 'inviteCodeError' : null}"></div>
-                        <span class="field-error" id="inviteCodeError" th:if="${#fields.hasErrors('inviteCode')}" th:errors="*{inviteCode}">Invitation error</span>
-                    </div>
                 </div>
 
                 <div class="register-academic-group">
