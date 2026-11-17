@@ -67,6 +67,16 @@ class ProfileSaveTest {
     }
 
     @Test
+    void errorPageActuallyRendersTheDiagnosticPanel() throws Exception {
+        mvc.perform(get("/error").accept(org.springframework.http.MediaType.TEXT_HTML)
+                .requestAttr(jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE, 400))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Error details")))
+                .andExpect(content().string(containsString("D2")))
+                .andExpect(content().string(containsString("Reference:")));
+    }
+
+    @Test
     void invalidInputRendersFieldErrorsAndKeepsExistingData() throws Exception {
         mvc.perform(post("/profile").with(user(email)).with(csrf())
                 .param("name", "Should Not Save").param("email", email)

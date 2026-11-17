@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ErrorDiagnosticsTest {
     @Test
     void rejectedRequestGetsAReferenceWithoutAnException() {
-        var request = new MockHttpServletRequest("GET", "/error");
+        var request = new MockHttpServletRequest("POST", "/profile");
         request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 400);
         var view = new ModelAndView("error");
         new ErrorDiagnostics().postHandle(request, new MockHttpServletResponse(), new Object(), view);

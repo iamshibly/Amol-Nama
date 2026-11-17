@@ -24,7 +24,7 @@ public class ErrorDiagnostics implements WebMvcConfigurer, HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView view) {
-        if (!"/error".equals(request.getRequestURI()) || view == null) {
+        if (view == null || !"error".equals(view.getViewName())) {
             return;
         }
         String reference = UUID.randomUUID().toString().substring(0, 8);

@@ -15,11 +15,12 @@
     <span class="page-kicker">Unexpected error</span>
     <h1>Something went wrong.</h1>
     <p>The page could not be completed. Return to the dashboard and try again.</p>
-    <div th:if="${errorReference != null}" role="status" style="margin:16px 0; font-size:14px; overflow-wrap:anywhere;">
-        <p style="margin:4px 0">Reference: <strong th:text="${errorReference}">reference</strong></p>
-        <p style="margin:4px 0">Status: <span th:text="${diagnosticStatus}">500</span> · Code: <span th:text="${diagnosticCode}">REQUEST_REJECTED</span></p>
-    </div>
-    <p th:if="${errorReference == null and status != null}" style="font-size:14px">Status: <span th:text="${status}">500</span></p>
+    <section aria-label="Error details" style="margin:20px auto; padding:16px; border:1px solid #d9e1ec; border-radius:12px; max-width:560px; font-size:14px; overflow-wrap:anywhere; background:#f7f9fc;">
+        <strong>Error details · D2</strong>
+        <p style="margin:6px 0">Reference: <span th:text="${errorReference != null ? errorReference : 'UNAVAILABLE'}">UNAVAILABLE</span></p>
+        <p style="margin:6px 0">Status: <span th:text="${diagnosticStatus != null ? diagnosticStatus : (status != null ? status : 'UNAVAILABLE')}">UNAVAILABLE</span></p>
+        <p style="margin:6px 0">Code: <span th:text="${diagnosticCode != null ? diagnosticCode : 'ERROR_DISPATCH'}">ERROR_DISPATCH</span></p>
+    </section>
     <div class="error-actions"><a class="button button-blue" th:href="@{/dashboard}"><svg class="icon"><use href="/images/ui-icons.svg#dashboard"></use></svg>Dashboard</a><a class="button button-ghost" href="javascript:history.back()">Go Back</a></div>
 </main>
 </body>
