@@ -137,3 +137,16 @@ button { cursor: pointer; }
     .login-showcase h1 { font-size: 31px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+/* Public-facing developer attribution */
+.showcase-developer-credit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 7px;
+    padding-top: 14px;
+    border-top: 1px solid #9bbad226;
+    color: #b7c8dd;
+    font-size: 10px;
+    line-height: 1.6;
+}
+.showcase-developer-credit strong { color: #f9fbff; font-weight: 700; }
+.showcase-developer-credit span { color: #b7c8dd; }

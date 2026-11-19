@@ -1777,3 +1777,44 @@ body:not(.auth-body):not(.error-body)::after {
         grid-column: auto;
     }
 }
+
+/* Project attribution: compact About section and sidebar footer */
+.project-about {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 24px;
+    padding: 25px 30px;
+    scroll-margin-top: 90px;
+}
+.project-about-copy { max-width: 680px; }
+.project-about-copy h2 { margin: 8px 0; font-size: 21px; }
+.project-about-copy p { margin: 0; color: var(--v3-muted); font-size: 14px; line-height: 1.75; }
+.project-about-developer {
+    flex: 0 1 280px;
+    display: grid;
+    gap: 4px;
+    padding-left: 24px;
+    border-left: 1px solid var(--v3-line);
+}
+.project-about-developer span { color: var(--v3-muted); font-size: 12px; }
+.project-about-developer strong { color: var(--v3-ink); font-size: 15px; line-height: 1.4; }
+.project-about-developer small { color: var(--v3-blue); font-size: 12px; }
+.sidebar-developer-credit {
+    margin: 12px 3px 0;
+    color: #92a9c5;
+    font-size: 11px;
+    line-height: 1.5;
+    text-align: center;
+}
+.sidebar-developer-credit strong {
+    display: block;
+    color: #e3ecfb;
+    font-size: 12px;
+    font-weight: 700;
+}
+@media (max-width: 760px) {
+    .project-about { align-items: stretch; flex-direction: column; gap: 16px; padding: 22px; }
+    .project-about-developer { flex: 0 1 auto; padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--v3-line); }
+}

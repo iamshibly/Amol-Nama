@@ -68,12 +68,20 @@
                     <span>Admin Panel</span>
                 </a>
             </div>
+            <div class="nav-group">
+                <span class="nav-label">About</span>
+                <a class="nav-link nav-tone-cyan" th:href="@{/dashboard} + '#about-amolnama'">
+                    <svg class="icon" aria-hidden="true"><use href="/images/ui-icons.svg#spark"></use></svg>
+                    <span>About AmolNama</span>
+                </a>
+            </div>
         </nav>
 
         <div class="sidebar-footer">
             <form id="logoutForm" class="sidebar-logout-form" th:action="@{/logout}" method="post">
                 <button class="sidebar-logout-button" type="button" data-open-logout-modal>Log out</button>
             </form>
+            <p class="sidebar-developer-credit">Developed by <strong>Md. Zubayer Ahmad Shibly</strong></p>
         </div>
     </aside>
 
